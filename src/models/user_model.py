@@ -1,16 +1,16 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
-from datetime import datetime
-from src.db import Base
 import uuid
-
+from datetime import datetime
+from sqlalchemy import Boolean, DateTime, func, String
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import mapped_column
+from src.db import Base
 
 class UserModel(Base):
     __tablename__ = "users"
 
-    id = Column(
-        UUID(as_uuid=True),
+    id: Mapped[uuid.UUID] = mapped_column(
+        PG_UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         unique=True,
@@ -18,15 +18,15 @@ class UserModel(Base):
         comment="Уникальный UUID пользователя"
     )
 
-    email = Column(
-        String(320),   # максимальная длина RFC-совместимого email
+    email: Mapped[str] = mapped_column(
+        String(320),
         unique=True,
         nullable=False,
         index=True,
         comment="Email пользователя, используется как логин"
     )
 
-    username = Column(
+    username: Mapped[str | None] = mapped_column(
         String(50),
         unique=True,
         nullable=True,
@@ -34,26 +34,27 @@ class UserModel(Base):
         comment="Отображаемое имя пользователя"
     )
 
-    hashed_password = Column(
+    hashed_password: Mapped[str] = mapped_column(
         String(128),
         nullable=False,
         comment="Bcrypt-хэш пароля"
     )
 
-    is_active = Column(
+    is_active: Mapped[bool] = mapped_column(
         Boolean,
         default=True,
         nullable=False,
         comment="Аккаунт активен/заблокирован"
     )
 
-    created_at = Column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False,
         comment="Когда аккаунт был создан"
     )
-    updated_at = Column(
+
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
@@ -67,7 +68,7 @@ class UserModel(Base):
         cascade="all, delete-orphan",
         lazy="selectin",
     )
+    
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email}>"
-    
