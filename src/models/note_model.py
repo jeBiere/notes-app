@@ -1,24 +1,15 @@
-# app/models/note.py
-
 import uuid
-from sqlalchemy import (
-    Column,
-    String,
-    Text,
-    Boolean,
-    DateTime,
-    ForeignKey,
-    func,
-)
+from datetime import datetime
+from sqlalchemy import String, Text, Boolean, DateTime, func, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
-from src.db import Base  # или app.database: Base
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from src.db import Base
+from src.models.user_model import UserModel
 
 class NoteModel(Base):
     __tablename__ = "notes"
 
-    # UUID — уникальный ключ заметки
-    id = Column(
+    id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
@@ -27,8 +18,7 @@ class NoteModel(Base):
         comment="Уникальный UUID заметки"
     )
 
-    # Внешний ключ на пользователя
-    owner_id = Column(
+    owner_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
@@ -36,30 +26,27 @@ class NoteModel(Base):
         comment="UUID владельца заметки"
     )
 
-    # Заголовок заметки
-    title = Column(
+    title: Mapped[str] = mapped_column(
         String(200),
         nullable=False,
         default="",
         comment="Заголовок заметки"
     )
 
-    # Основное содержимое
-    content = Column(
+    content: Mapped[str] = mapped_column(
         Text,
         nullable=False,
         comment="Текст заметки"
     )
 
-    # Метки времени
-    created_at = Column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False,
         comment="Когда заметка была создана"
     )
 
-    updated_at = Column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
@@ -67,8 +54,8 @@ class NoteModel(Base):
         comment="Когда заметка была обновлена"
     )
 
-    owner = relationship(
-        "UserModel",               
+    owner: Mapped["UserModel"] = relationship(
+        "UserModel",
         back_populates="notes",
         lazy="selectin",
     )

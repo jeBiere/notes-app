@@ -1,3 +1,4 @@
+from typing import List
 import uuid
 from datetime import datetime
 from sqlalchemy import Boolean, DateTime, func, String
@@ -5,6 +6,7 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.orm import mapped_column
 from src.db import Base
+from src.models.note_model import NoteModel
 
 class UserModel(Base):
     __tablename__ = "users"
@@ -62,13 +64,13 @@ class UserModel(Base):
         comment="Когда аккаунт последний раз обновлялся"
     )
 
-    notes = relationship(
+    notes: Mapped[List["NoteModel"]] = relationship(
         "NoteModel",
         back_populates="owner",
         cascade="all, delete-orphan",
         lazy="selectin",
     )
-    
+
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email}>"
