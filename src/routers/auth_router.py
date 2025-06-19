@@ -2,11 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from src.schemas.user_schemas import UserCreate
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db import get_async_db
-from src.crud.user_crud import get_user_by_email, get_users
+from src.crud.user_crud import get_user_by_email
 from src.crud.auth_crud import register_user
+
 router = APIRouter(
-    prefix="/user",
-    tags=["user"],
+    prefix="/auth",
+    tags=["auth"],
 )
 
 
@@ -26,12 +27,3 @@ async def registration(user_in: UserCreate, db: AsyncSession = Depends(get_async
             detail=(str(e))
         )
     return user
-
-
-@router.get("/users")
-async def read_users(db: AsyncSession = Depends(get_async_db)):
-    result = await get_users(db)
-    return result
-    
-    
-

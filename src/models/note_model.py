@@ -1,11 +1,13 @@
 import uuid
+from typing import TYPE_CHECKING
 from datetime import datetime
 from sqlalchemy import String, Text, Boolean, DateTime, func, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.db import Base
-from src.models.user_model import UserModel
-
+#from src.models.user_model import UserModel
+if TYPE_CHECKING:
+    from .user_model import UserModel
 class NoteModel(Base):
     __tablename__ = "notes"
 

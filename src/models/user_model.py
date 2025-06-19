@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, TYPE_CHECKING
 import uuid
 from datetime import datetime
 from sqlalchemy import Boolean, DateTime, func, String
@@ -6,7 +6,12 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.orm import mapped_column
 from src.db import Base
-from src.models.note_model import NoteModel
+#from src.models.note_model import NoteModel
+
+
+if TYPE_CHECKING:
+    from .note_model import NoteModel
+    
 
 class UserModel(Base):
     __tablename__ = "users"
