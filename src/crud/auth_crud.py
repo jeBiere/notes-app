@@ -17,7 +17,6 @@ async def register_user(db: AsyncSession, user_in: AuthRegistration) -> UserMode
     if existing:
         raise ValueError("Email already registered")
         
-
     hashed = pwd_context.hash(user_in.password)
 
     user = UserModel(
