@@ -1,4 +1,4 @@
-# src/schemas/user.py
+# src/schemas/user_schemas.py
 
 from typing import Optional
 from uuid import UUID
@@ -15,15 +15,6 @@ class UserBase(BaseModel):
         max_length=50,
     )
 
-
-class UserCreate(UserBase):
-    password: str = Field(
-        title="Пароль (строка от 8 до 128 символов)",
-        min_length=8,
-        max_length=128,
-    )
-
-
 class UserRead(UserBase):
     id: UUID = Field(title="UUID пользователя")
     is_active: bool = Field(title="Статус активности")
@@ -32,3 +23,4 @@ class UserRead(UserBase):
 
     class Config:
         orm_mode = True
+

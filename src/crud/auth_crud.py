@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas.user_schemas import UserCreate
+from src.schemas.auth_schemas import AuthRegistration
 from src.models.user_model import UserModel
 from src.crud.user_crud import get_user_by_email
 
@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-async def register_user(db: AsyncSession, user_in: UserCreate) -> UserModel:
+async def register_user(db: AsyncSession, user_in: AuthRegistration) -> UserModel:
     """
     Регистрация нового пользователя: проверка на существование, хэширование пароля, сохранение в БД.
     """

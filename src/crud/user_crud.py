@@ -2,9 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from passlib.context import CryptContext
 from typing import Optional, List, Sequence
-
 from src.models.user_model import UserModel
-from src.schemas.user_schemas import UserCreate
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
