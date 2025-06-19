@@ -12,7 +12,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from db import Base  # или app.database: Base
+from src.db import Base  # или app.database: Base
 
 class NoteModel(Base):
     __tablename__ = "notes"
@@ -58,7 +58,7 @@ class NoteModel(Base):
         nullable=False,
         comment="Когда заметка была создана"
     )
-    
+
     updated_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
