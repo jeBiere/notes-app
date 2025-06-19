@@ -1,0 +1,40 @@
+# Виртуальное окружение
+.venv/
+.env          # ваши секреты и строки подключения
+
+# Python-артефакты
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Логи и дампы
+*.log
+*.sql
+*.sqlite
+*.db
+
+# Инструменты и IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Poetry
+# (обычно poetry.lock включают в репозиторий, но
+#  можно игнорировать, если вы хотите всегда генерить свежий)
+# poetry.lock
+
+# Alembic
+alembic.ini
+alembic/README
+alembic/script.py.mako
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Артефакты тестирования
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
