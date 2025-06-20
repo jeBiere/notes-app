@@ -14,33 +14,44 @@ class InvalidToken(Exception):
     pass
 
 
-def create_access_token(payload: TokenPayload) -> str:
+def create_token(payload: TokenPayload, expires_delta: timedelta, token_type: str) -> str:
     """
-    Генерирует JWT токен из TokenPayload. Подписывается приватным ключом.
+    Генерирует JWT токен с заданным типом (`access` или `refresh`).
     """
     to_encode = payload.dict()
+    expire = datetime.utcnow() + expires_delta
 
-    expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
-    to_encode["exp"] = expire
+    to_encode.update({
+        "exp": expire,
+        "token_type": token_type
+    })
 
     token = jwt.encode(
         payload=to_encode,
         key=settings.private_key,
         algorithm=settings.jwt_algorithm,
     )
-
     return token
 
 
-def decode_token(token: str) -> TokenPayload:
+
+def decode_token(token: str, expected_type: str | None = None) -> TokenPayload:
     try:
         payload = jwt.decode(
             token,
-            key=settings.public_key,  # тоже bytes
+            key=settings.public_key,
             algorithms=[settings.jwt_algorithm],
         )
+
+        if expected_type and payload.get("token_type") != expected_type:
+            raise InvalidToken("Invalid token type")
+
         return TokenPayload(**payload)
+
     except ExpiredSignatureError:
         raise TokenExpired("JWT token has expired")
     except InvalidTokenError:
         raise InvalidToken("JWT token is invalid")
+
+    
+    

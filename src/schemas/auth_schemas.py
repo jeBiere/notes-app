@@ -23,7 +23,7 @@ class AuthLogin(BaseModel):
     )
 
 
-class LoginResponse(BaseModel):
+class MessageResponse(BaseModel):
     message: str
 
 class TokenPayload(BaseModel):

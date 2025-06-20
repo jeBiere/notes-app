@@ -3,17 +3,16 @@ from fastapi import Depends, Request, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.dependencies.db import get_async_db
+from src.dependencies.security_scheme import get_token_from_cookie
 from src.utils.jwt_utils import decode_token, TokenExpired, InvalidToken
 from src.crud.user_crud import get_user_by_id
 from src.models.user_model import UserModel
 
 
 async def get_current_user(
-    request: Request,
+    token: str = Depends(get_token_from_cookie),
     db: AsyncSession = Depends(get_async_db)
 ) -> UserModel:
-    token = request.cookies.get("access_token")
-
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

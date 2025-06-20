@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     jwt_private_key_path: str
     jwt_public_key_path: str
     access_token_expire_minutes: int = 30
+    refresh_token_expire_minutes: int = 60 * 24 * 30  # 30 дней
+
 
     @property
     def private_key(self) -> bytes:
