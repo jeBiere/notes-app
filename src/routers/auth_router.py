@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db import get_async_db
-from src.schemas.auth_schemas import AuthRegistration, AuthLogin
+from src.schemas.auth_schemas import AuthRegistration, AuthLogin, TokenPayload, TokenResponse
 from src.crud.auth_crud import authenticate_user
 from src.crud.user_crud import get_user_by_email
 from src.crud.auth_crud import register_user
+from src.utils.jwt_utils import create_access_token
 
 router = APIRouter(
     prefix="/auth",
@@ -37,5 +38,13 @@ async def login(user_in: AuthLogin, db: AsyncSession = Depends(get_async_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Неверный email или пароль",
         )
+    payload = TokenPayload(
+        sub=str(user.id),
+        email=user.email,
+    )
 
-    return user
+    access_token = create_access_token(payload)
+    
+    return TokenResponse(access_token=access_token)
+
+
