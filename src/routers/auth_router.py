@@ -19,6 +19,7 @@ router = APIRouter(
 @router.post("/logout", response_model=MessageResponse)
 async def logout(response: Response):
     response.delete_cookie(key="access_token")
+    response.delete_cookie(key="refresh_token")
     return {"message": "Logout successful"}
 
 
