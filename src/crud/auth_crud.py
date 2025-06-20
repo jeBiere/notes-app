@@ -32,6 +32,7 @@ async def authenticate_user(db: AsyncSession, email: str, password: str) -> User
     Аутентифицирует пользователя: проверяет email и пароль.
     Возвращает пользователя, если всё верно, иначе None.
     """
+    
     user = await get_user_by_email(db, email)
     if not user:
         return None
