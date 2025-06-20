@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.db import get_async_db
+from src.dependencies.db import get_async_db
 from src.schemas.auth_schemas import AuthRegistration, AuthLogin, TokenPayload, TokenResponse
 from src.crud.auth_crud import authenticate_user
 from src.crud.user_crud import get_user_by_email
@@ -31,7 +31,7 @@ async def registration(user_in: AuthRegistration, db: AsyncSession = Depends(get
     return user
 
 @router.post("/login")
-async def login(user_in: AuthLogin, db: AsyncSession = Depends(get_async_db)):
+async def login(user_in: AuthLogin,response: Response ,db: AsyncSession = Depends(get_async_db)):
     user = await authenticate_user(db=db, email=user_in.email, password=user_in.password)
     if not user:
         raise HTTPException(
@@ -45,6 +45,15 @@ async def login(user_in: AuthLogin, db: AsyncSession = Depends(get_async_db)):
 
     access_token = create_access_token(payload)
     
-    return TokenResponse(access_token=access_token)
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,       # Защищает от XSS
+        secure=False,        # В проде ставим True (https)
+        samesite="lax",      # или "strict"
+        max_age=60 * 30      # столько же, сколько живёт токен
+    )
+    
+    return {"message": "Login successful"}
 
 

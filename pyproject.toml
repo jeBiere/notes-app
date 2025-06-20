@@ -16,7 +16,8 @@ dependencies = [
   "asyncpg (>=0.30.0,<0.31.0)",
   "passlib[bcrypt] (>=1.7.4,<2.0.0)",
   "pyjwt[cryptography] (>=2.10.1,<3.0.0)",
-  "pydantic-settings (>=2.9.1,<3.0.0)"
+  "pydantic-settings (>=2.9.1,<3.0.0)",
+  "cryptography (>=45.0.4,<46.0.0)"
 ]
 
 [tool.poetry]

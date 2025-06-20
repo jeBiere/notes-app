@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.db import get_async_db
+from src.dependencies.db import get_async_db
 from src.crud.user_crud import get_users, get_user_by_email, get_user_by_id
 
 

@@ -1,9 +1,18 @@
 import jwt
-from datetime import datetime, timedelta
-from typing import Any
-from src.schemas.auth_schemas import TokenPayload
+from jwt import ExpiredSignatureError, InvalidTokenError
 
+from fastapi import HTTPException, status
+from datetime import datetime, timedelta
+
+from src.schemas.auth_schemas import TokenPayload
 from src.config.settings import settings
+
+class TokenExpired(Exception):
+    pass
+
+class InvalidToken(Exception):
+    pass
+
 
 def create_access_token(payload: TokenPayload) -> str:
     """
@@ -21,3 +30,17 @@ def create_access_token(payload: TokenPayload) -> str:
     )
 
     return token
+
+
+def decode_token(token: str) -> TokenPayload:
+    try:
+        payload = jwt.decode(
+            token,
+            key=settings.public_key,  # тоже bytes
+            algorithms=[settings.jwt_algorithm],
+        )
+        return TokenPayload(**payload)
+    except ExpiredSignatureError:
+        raise TokenExpired("JWT token has expired")
+    except InvalidTokenError:
+        raise InvalidToken("JWT token is invalid")

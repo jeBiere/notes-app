@@ -13,12 +13,12 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
 
     @property
-    def private_key(self) -> str:
-        return Path(self.jwt_private_key_path).read_text()
+    def private_key(self) -> bytes:
+        return Path(self.jwt_private_key_path).read_bytes()
 
     @property
-    def public_key(self) -> str:
-        return Path(self.jwt_public_key_path).read_text()
+    def public_key(self) -> bytes:
+        return Path(self.jwt_public_key_path).read_bytes()
 
     app_host: str = "127.0.0.1"
     app_port: int = 8000
