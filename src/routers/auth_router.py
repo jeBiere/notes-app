@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.dependencies.db import get_async_db
-from src.schemas.auth_schemas import AuthRegistration, AuthLogin, TokenPayload, TokenResponse
+from src.schemas.auth_schemas import AuthRegistration, AuthLogin, TokenPayload, LoginResponse
+from src.schemas.user_schemas import UserRead
 from src.crud.auth_crud import authenticate_user
 from src.crud.user_crud import get_user_by_email
 from src.crud.auth_crud import register_user
@@ -13,7 +14,7 @@ router = APIRouter(
 )
 
 
-@router.post("/registration")
+@router.post("/registration", response_model=UserRead)
 async def registration(user_in: AuthRegistration, db: AsyncSession = Depends(get_async_db)):
     existing = await get_user_by_email(db, user_in.email)
     if existing:
@@ -30,7 +31,7 @@ async def registration(user_in: AuthRegistration, db: AsyncSession = Depends(get
         )
     return user
 
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse)
 async def login(user_in: AuthLogin,response: Response ,db: AsyncSession = Depends(get_async_db)):
     user = await authenticate_user(db=db, email=user_in.email, password=user_in.password)
     if not user:

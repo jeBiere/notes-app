@@ -22,11 +22,10 @@ class AuthLogin(BaseModel):
         max_length=128,
     )
 
+
+class LoginResponse(BaseModel):
+    message: str
+
 class TokenPayload(BaseModel):
     sub: str  # user_id
     email: EmailStr
-
-
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: Literal["bearer"] = "bearer"
